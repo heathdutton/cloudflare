@@ -23,4 +23,19 @@ class Plugin extends PluginBase
         ];
     }
 
+    public function boot()
+    {
+        /*
+         * Event listen to disable Cloudflare's cache on backend.
+         *
+         */
+        Event::listen('system.assets.modifyAttributes', function($attributes)
+        {
+            if (isset($attributes['cache']) && $attributes['cache'] == 'false') {
+                $attributes['data-cfasync'] = 'false';
+                unset($attributes['cache']);
+            }
+        });
+    }
+
 }
